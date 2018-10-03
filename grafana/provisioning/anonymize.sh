@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+export GF_VARIABLES_JIRA_NAME="Jira"
+export GF_VARIABLES_JIRA_VALUE="jira-domain"
+
+export GF_VARIABLES_ORG_NAME="Org"
+export GF_VARIABLES_ORG_VALUE="github-org"
+
+export GF_VARIABLES_BOARD_NAME="Board"
+export GF_VARIABLES_BOARD_VALUE="B1"
+export GF_VARIABLES_BOARD_VALUES="B1,B2"
+
+export GF_VARIABLES_TOPIC_NAME="Topic"
+export GF_VARIABLES_TOPIC_VALUE="T1"
+export GF_VARIABLES_TOPIC_VALUES="T1,T2"
+
+./apply.sh

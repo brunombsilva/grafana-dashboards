@@ -7,13 +7,23 @@ services:
       context: './grafana'
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     environment:
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SECURITY_ADMIN_USER
       - GF_SECURITY_ADMIN_PASSWORD
       - GF_AUTH_GOOGLE_CLIENT_ID
       - GF_AUTH_GOOGLE_CLIENT_SECRET
+      - GF_AUTH_GOOGLE_ALLOWED_DOMAINS
+      - GF_VARIABLES_JIRA_NAME
+      - GF_VARIABLES_JIRA_VALUE
+      - GF_VARIABLES_ORG_NAME
+      - GF_VARIABLES_ORG_VALUE
+      - GF_VARIABLES_BOARD_NAME
+      - GF_VARIABLES_BOARD_VALUE
+      - GF_VARIABLES_BOARD_VALUES
+      - GF_VARIABLES_TOPIC_NAME
+      - GF_VARIABLES_TOPIC_VALUE
+      - GF_VARIABLES_TOPIC_VALUES
     depends_on:
       - prometheus
       - jira-datasource
