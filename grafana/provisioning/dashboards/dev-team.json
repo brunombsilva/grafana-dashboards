@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1538846058855,
+  "iteration": 1538942359060,
   "links": [
     {
       "icon": "external link",
@@ -159,7 +159,7 @@
           ],
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "decimals": 2,
-          "link": true,
+          "link": false,
           "linkTargetBlank": false,
           "linkTooltip": "",
           "linkUrl": "",
@@ -399,7 +399,7 @@
       ],
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1538846058855,
+      "repeatIteration": 1538942359060,
       "repeatPanelId": 6,
       "scopedVars": {
         "JiraBottleneck": {
@@ -491,7 +491,7 @@
       ],
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1538846058855,
+      "repeatIteration": 1538942359060,
       "repeatPanelId": 6,
       "scopedVars": {
         "JiraBottleneck": {
