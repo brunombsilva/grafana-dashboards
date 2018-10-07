@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const utils = require("./utils");
 
 const filters = state => {
   const topics = _(state.repos)
@@ -31,7 +32,6 @@ const isMatch = (pr, filter, value) => {
     case "repo":
       return pr.repo.name == value;
     case "topic":
-      console.log(pr);
       return pr.repo.topics.includes(value);
     default:
       return true;
@@ -58,8 +58,6 @@ const pullRequestsTable = ({ pullRequests } = state, filter, value) => {
       const n = new Date();
       const c = new Date(pr.created_at);
       const u = new Date(pr.updated_at);
-      let cd = Math.ceil((n - c) / (1000 * 60 * 60 * 24));
-      let ud = Math.ceil((n - u) / (1000 * 60 * 60 * 24));
       return _.values({
         repo: pr.repo.name,
         ..._.pick(pr, [
@@ -72,8 +70,8 @@ const pullRequestsTable = ({ pullRequests } = state, filter, value) => {
           "user",
           "comments"
         ]),
-        days_since_creation: cd,
-        days_since_update: ud
+        days_since_creation: utils.getNumWorkDays(c, n),
+        days_since_update: utils.getNumWorkDays(u, n)
       });
     });
 
