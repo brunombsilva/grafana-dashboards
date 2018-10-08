@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1538942359060,
+  "iteration": 1539017197084,
   "links": [
     {
       "icon": "external link",
@@ -107,8 +107,8 @@
           "decimals": 0,
           "link": true,
           "linkTargetBlank": true,
-          "linkTooltip": "https://github.com/$Org/${__cell_0}/pulls/${__cell_1}",
-          "linkUrl": "https://github.com/$Org/${__cell_0}/pulls/${__cell_1}",
+          "linkTooltip": "https://github.com/$Org/${__cell_0}/pull/${__cell_1}",
+          "linkUrl": "https://github.com/$Org/${__cell_0}/pull/${__cell_1}",
           "mappingType": 1,
           "pattern": "Number",
           "preserveFormat": false,
@@ -280,7 +280,14 @@
       },
       "id": 6,
       "interval": null,
-      "links": [],
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Jira Board",
+          "type": "absolute",
+          "url": "https://${Jira}/secure/RapidBoard.jspa?projectKey=${Board}"
+        }
+      ],
       "mappingType": 1,
       "mappingTypes": [
         {
@@ -399,7 +406,7 @@
       ],
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1538942359060,
+      "repeatIteration": 1539017197084,
       "repeatPanelId": 6,
       "scopedVars": {
         "JiraBottleneck": {
@@ -491,7 +498,7 @@
       ],
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1538942359060,
+      "repeatIteration": 1539017197084,
       "repeatPanelId": 6,
       "scopedVars": {
         "JiraBottleneck": {
@@ -849,5 +856,5 @@
   "timezone": "",
   "title": "Development Team",
   "uid": "38mMdDAik3",
-  "version": 1
+  "version": 2
 }
