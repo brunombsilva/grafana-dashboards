@@ -1,7 +1,8 @@
 const _ = require("lodash");
 const utils = require("./utils");
+const jira = require("./jira");
 
-const filters = state => {
+const githubFilters = state => {
   const topics = _(state.repos)
     .flatMap(r => r.topics)
     .uniq()
@@ -12,15 +13,32 @@ const filters = state => {
     return { name: "repo", value: r.name };
   });
   const metrics = ["pull_requests" /*, "repos"*/];
-  const filters = _.flatMap(metrics, m => {
-    return [...topics, ...repos].map(f => {
+
+  return _(metrics)
+    .flatMap(m => {
+      return [...topics, ...repos].map(f => {
+        return {
+          text: `${m}(${f.name}=${f.value})`,
+          value: `${m}(${f.name}=${f.value})`
+        };
+      });
+    })
+    .values();
+};
+
+const jiraFilters = state => {
+  return _(state.jiraFilters)
+    .map(f => {
       return {
-        text: `${m}(${f.name}=${f.value})`,
-        value: `${m}(${f.name}=${f.value})`
+        text: `jira_issues(filter=${f.name})`,
+        value: `jira_issues(filter=${f.id})`
       };
-    });
-  });
-  return filters;
+    })
+    .values();
+};
+
+const filters = state => {
+  return [...githubFilters(state), ...jiraFilters(state)];
 };
 
 const pullRequestsTimeseries = ({ pullRequests } = state, filter, value) => {
@@ -78,8 +96,38 @@ const pullRequestsTable = ({ pullRequests } = state, filter, value) => {
   return { columns, rows };
 };
 
+const jiraIssuesTimeseries = async (state, filter, value) => {
+  const issues = await jira.search(value);
+  let datapoints = [[issues.length, new Date()]];
+  return datapoints;
+};
+
+const jiraIssuesTable = async (state, filter, value) => {
+  const issues = await jira.search(value);
+  const columns = [
+    { text: "Key", type: "string" },
+    { text: "Summary", type: "string" },
+    { text: "Assignee", type: "string" },
+    { text: "Status", type: "string" },
+    { text: "Created", type: "time" }
+  ];
+  const rows = issues.map(issue => {
+    return [
+      issue.key,
+      issue.fields.summary,
+      issue.fields.assignee ? issue.fields.assignee.displayName : "",
+      issue.fields.status ? issue.fields.status.name : "",
+      issue.fields.created
+    ];
+  });
+
+  return { columns, rows };
+};
+
 module.exports = {
   filters,
   pullRequestsTimeseries,
-  pullRequestsTable
+  pullRequestsTable,
+  jiraIssuesTimeseries,
+  jiraIssuesTable
 };
