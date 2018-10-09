@@ -30,7 +30,6 @@ function replaceVariables() {
         fi
     done
     transform=". | .templating.list=[.templating.list[] ${variables[@]}]"
-    echo $transform
     eval "cat $input | jq '$transform' > $output"
 }
 
