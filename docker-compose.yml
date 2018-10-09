@@ -26,8 +26,7 @@ services:
       - GF_VARIABLES_TOPIC_VALUES
     depends_on:
       - prometheus
-      - jira-datasource
-      - github-datasource
+      - datasource
     ports:
       - '3000:3000'
 
@@ -46,24 +45,19 @@ services:
     #links:
     #  - github-exporter:metrics
 
-  jira-datasource:
-    build:
-      context: './jira-datasource'
     ports:
-      - '3001:3001'
-    environment:
-      - JIRA_HOST
-      - JIRA_USER
-      - JIRA_PASS
 
-  github-datasource:
+  datasource:
     build:
-      context: './github-datasource'
+      context: './datasource'
     ports:
       - '3002:3002'
     environment:
       - GITHUB_TOKEN
       - GITHUB_ORG
+      - JIRA_HOST
+      - JIRA_USER
+      - JIRA_PASS
 
 volumes:
   prometheus_data:

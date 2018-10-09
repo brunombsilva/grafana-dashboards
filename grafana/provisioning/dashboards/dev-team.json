@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1539017197084,
+  "iteration": 1539113404356,
   "links": [
     {
       "icon": "external link",
@@ -71,7 +71,7 @@
     },
     {
       "columns": [],
-      "datasource": "GitHub",
+      "datasource": "Datasource",
       "fontSize": "100%",
       "gridPos": {
         "h": 11,
@@ -107,8 +107,8 @@
           "decimals": 0,
           "link": true,
           "linkTargetBlank": true,
-          "linkTooltip": "https://github.com/$Org/${__cell_0}/pull/${__cell_1}",
-          "linkUrl": "https://github.com/$Org/${__cell_0}/pull/${__cell_1}",
+          "linkTooltip": "https://github.com/$Org/${__cell_0}/pulls/${__cell_1}",
+          "linkUrl": "https://github.com/$Org/${__cell_0}/pulls/${__cell_1}",
           "mappingType": 1,
           "pattern": "Number",
           "preserveFormat": false,
@@ -159,7 +159,7 @@
           ],
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "decimals": 2,
-          "link": false,
+          "link": true,
           "linkTargetBlank": false,
           "linkTooltip": "",
           "linkUrl": "",
@@ -263,7 +263,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "Jira",
+      "datasource": "Datasource",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -280,14 +280,7 @@
       },
       "id": 6,
       "interval": null,
-      "links": [
-        {
-          "targetBlank": true,
-          "title": "Jira Board",
-          "type": "absolute",
-          "url": "https://${Jira}/secure/RapidBoard.jspa?projectKey=${Board}"
-        }
-      ],
+      "links": [],
       "mappingType": 1,
       "mappingTypes": [
         {
@@ -334,7 +327,7 @@
         {
           "hide": false,
           "refId": "A",
-          "target": "[[Board]] - [[JiraBottleneck]]",
+          "target": "jira_issues(filter=[[Board]] - [[JiraBottleneck]])",
           "type": "timeserie"
         }
       ],
@@ -406,7 +399,7 @@
       ],
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1539017197084,
+      "repeatIteration": 1539113404356,
       "repeatPanelId": 6,
       "scopedVars": {
         "JiraBottleneck": {
@@ -498,7 +491,7 @@
       ],
       "repeat": null,
       "repeatDirection": "v",
-      "repeatIteration": 1539017197084,
+      "repeatIteration": 1539113404356,
       "repeatPanelId": 6,
       "scopedVars": {
         "JiraBottleneck": {
@@ -537,7 +530,7 @@
     },
     {
       "columns": [],
-      "datasource": "Jira",
+      "datasource": "Datasource",
       "fontSize": "100%",
       "gridPos": {
         "h": 10,
@@ -617,7 +610,7 @@
       "targets": [
         {
           "refId": "C",
-          "target": "[[Board]] - Active",
+          "target": "jira_issues(filter=[[Board]] - Active)",
           "type": "table"
         }
       ],
@@ -856,5 +849,5 @@
   "timezone": "",
   "title": "Development Team",
   "uid": "38mMdDAik3",
-  "version": 2
+  "version": 1
 }
