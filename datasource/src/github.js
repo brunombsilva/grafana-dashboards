@@ -53,10 +53,21 @@ async function getPullRequests(repos) {
 
     return await Promise.all(
       prs.map(async pr => {
+        const reviews = await paginate(octokit.pullRequests.getReviews, {
+          ...getR(repo),
+          number: pr.number
+        });
+
         const comments = await paginate(octokit.pullRequests.getComments, {
           ...getR(repo),
           number: pr.number
         });
+
+        const checks = await paginate(octokit.checks.listForRef, {
+          ...getR(repo),
+          ref: pr.head.ref
+        });
+
         return {
           number: pr.number,
           title: pr.title,
@@ -66,7 +77,21 @@ async function getPullRequests(repos) {
           url: pr.html_url,
           user: pr.user.login,
           comments: comments.length,
-          repo
+          repo,
+          checks: _(checks.check_runs).map(c => {
+            return {
+              name: c.name,
+              conclusion: c.conclusion,
+              status: c.status,
+            };
+          }),
+          reviews: _(reviews).map(r => {
+            return {
+              user: r.user.login,
+              state: r.state,
+              submitted_at: r.submitted_at
+            };
+          })
         };
       })
     );
