@@ -48,7 +48,6 @@ app.post("/query", async (req, res) => {
       const [full, metric, filter, value] = /^(.*)\((.*?)=(.*?)\)$/.exec(
 	target.target
       );
-      console.log([full, metric, filter, value]);
 
       if (target.type == "timeserie") {
 	let datapoints;

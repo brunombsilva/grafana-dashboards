@@ -62,6 +62,7 @@ const pullRequestsTable = ({ pullRequests } = state, filter, value) => {
     { text: "Number", type: "number" },
     { text: "Title", type: "string" },
     { text: "State", type: "string" },
+    { text: "Check", type: "string" },
     { text: "Created At", type: "time" },
     { text: "Updated At", type: "time" },
     { text: "URL", type: "string" },
@@ -73,21 +74,33 @@ const pullRequestsTable = ({ pullRequests } = state, filter, value) => {
   const rows = _(pullRequests)
     .filter(pr => isMatch(pr, filter, value))
     .map(pr => {
+      const state = _(pr.reviews).filter(r => r.state == 'APPROVED').value().length > 0 ? 'approved' : 'open';
+      const check = _(pr.checks).reduce((acc, c) => {
+        if (c.status != 'completed') {
+          return 'pending';
+        }
+        if (c.conclusion == 'failure') {
+          return 'failure';
+        }
+        if (acc == 'unknown') {
+          return 'success';
+        }
+        return acc;
+      }, 'unknown');
       const n = new Date();
       const c = new Date(pr.created_at);
       const u = new Date(pr.updated_at);
       return _.values({
         repo: pr.repo.name,
-        ..._.pick(pr, [
-          "number",
-          "title",
-          "state",
-          "created_at",
-          "updated_at",
-          "url",
-          "user",
-          "comments"
-        ]),
+        number: pr.number,
+        title: pr.title,
+        state: state,
+        check: check,
+        created_at: pr.created_at,
+        updated_at: pr.updated_at,
+        url: pr.url,
+        user: pr.user,
+        comments: pr.comments,
         days_since_creation: utils.getNumWorkDays(c, n),
         days_since_update: utils.getNumWorkDays(u, n)
       });
