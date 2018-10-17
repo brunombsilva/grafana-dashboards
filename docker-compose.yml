@@ -8,6 +8,8 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
+      - GF_TIME_FROM
+      - GF_TIME_TO
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SECURITY_ADMIN_USER
       - GF_SECURITY_ADMIN_PASSWORD

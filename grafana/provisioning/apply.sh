@@ -33,10 +33,27 @@ function replaceVariables() {
     eval "cat $input | jq '$transform' > $output"
 }
 
-input='./dashboards/dev-team.json'
+function updateTimestamps() {
+    start=${GF_TIME_FROM:-now/y}
+    end=${GF_TIME_TO:-now/y}
+
+    transform=".time.from = \"$start\" | \
+               .time.to = \"$end\" | \
+               .panels = [.panels[] | select(.title== \"End of Sprint\").countdownSettings.endCountdownTime=\"$end\"] \
+               "
+    eval "cat $input | jq '$transform' > $output"
+}
+
+original='./dashboards/dev-team.json'
+input=$original
 output=`mktemp`
 
 echo "Replacing variables in $input..."
 replaceVariables $input $output
-mv $output $input
+
+input=$output
+output=`mktemp`
+updateTimestamps $input $output
+
+mv $output $original
 echo "Done!"

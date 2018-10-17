@@ -26,6 +26,9 @@ Copy `sample.env` to `.env` and adjust to your needs.
 * **GF_VARIABLES_TOPIC_VALUE** - GitHub topic selected by default in dashboards
 * **GF_VARIABLES_TOPIC_VALUES** - Comma-separated list of GitHub topics selectable in dashboards
 
+* **GF_TIME_FROM** - Default starting time for the dashboard (For me, Sprint Planning)
+* **GF_TIME_TO** - Default ending time for the dashboard (For me, End of Sprint)
+
 ## Start Applications
 
 Start (after implicit build) all needed containers:
