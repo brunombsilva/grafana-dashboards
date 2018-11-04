@@ -5,7 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "debug": "node --nolazy --inspect-brk=9229 src/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +14,8 @@
     "@octokit/rest": "^15.12.0",
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
+    "faker": "^4.1.0",
+    "influx": "^5.0.7",
     "jira-connector": "^2.9.0",
     "lodash": "^4.17.11",
     "morgan": "^1.9.1",

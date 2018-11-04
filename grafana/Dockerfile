@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -qq -y jq
 
 USER grafana
 
-ARG GF_INSTALL_PLUGINS="grafana-clock-panel,  grafana-simple-json-datasource"
+ARG GF_INSTALL_PLUGINS="grafana-clock-panel, grafana-simple-json-datasource, briangann-datatable-panel"
 
 RUN if [ ! -z "${GF_INSTALL_PLUGINS}" ]; then \
     OLDIFS=$IFS; \

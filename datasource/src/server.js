@@ -5,6 +5,7 @@ const schedule = require("node-schedule");
 const _ = require("lodash");
 
 const github = require("./github");
+const influx = require("./influx");
 const grafana = require("./grafana");
 const jira = require("./jira");
 
@@ -12,12 +13,25 @@ const PORT = process.env.PORT || 3002;
 
 const app = express();
 
-const state = {
+var state = {
   repos: [],
   pullRequests: []
 };
 
-var j = schedule.scheduleJob("*/30 * * * *", update);
+if (process.env.NODE_ENV === "development") {
+  const factory = require("../test/factory");
+  state = factory.initialState();
+  const devUpdate = async () => {
+    await influx.update(state);
+    console.log("All up to date.");
+    state = factory.updatedState(state);
+  };
+  schedule.scheduleJob("* * * * *", devUpdate);
+  devUpdate();
+} else {
+  schedule.scheduleJob("*/30 * * * *", update);
+  update();
+}
 
 async function update() {
   console.log("Updating repositories list...");
@@ -26,10 +40,10 @@ async function update() {
   state.pullRequests = await github.getPullRequests(state.repos);
   console.log("Updating jira filters list...");
   state.jiraFilters = await jira.getFilters();
+  console.log("Updating Influx");
+  await influx.update(state);
   console.log("All up to date.");
 }
-
-update();
 
 app.use(bodyParser.json());
 app.use(morgan("combined"));
@@ -46,52 +60,52 @@ app.post("/query", async (req, res) => {
   const result = await Promise.all(
     req.body.targets.map(async target => {
       const [full, metric, filter, value] = /^(.*)\((.*?)=(.*?)\)$/.exec(
-	target.target
+        target.target
       );
 
       if (target.type == "timeserie") {
-	let datapoints;
-	switch (metric) {
-	  case "pull_requests":
-	    datapoints = grafana.pullRequestsTimeseries(state, filter, value);
-	    break;
-	  case "jira_issues":
-	    datapoints = await grafana.jiraIssuesTimeseries(
-	      state,
-	      filter,
-	      value
-	    );
-	    break;
-	}
+        let datapoints;
+        switch (metric) {
+          case "pull_requests":
+            datapoints = grafana.pullRequestsTimeseries(state, filter, value);
+            break;
+          case "jira_issues":
+            datapoints = await grafana.jiraIssuesTimeseries(
+              state,
+              filter,
+              value
+            );
+            break;
+        }
 
-	return {
-	  target: target.target,
-	  datapoints: datapoints
-	};
+        return {
+          target: target.target,
+          datapoints: datapoints
+        };
       } else if (target.type == "table") {
-	let columns, rows;
-	switch (metric) {
-	  case "pull_requests":
-	    ({ columns, rows } = grafana.pullRequestsTable(
-	      state,
-	      filter,
-	      value
-	    ));
-	    break;
-	  case "jira_issues":
-	    ({ columns, rows } = await grafana.jiraIssuesTable(
-	      state,
-	      filter,
-	      value
-	    ));
-	    break;
-	}
+        let columns, rows;
+        switch (metric) {
+          case "pull_requests":
+            ({ columns, rows } = grafana.pullRequestsTable(
+              state,
+              filter,
+              value
+            ));
+            break;
+          case "jira_issues":
+            ({ columns, rows } = await grafana.jiraIssuesTable(
+              state,
+              filter,
+              value
+            ));
+            break;
+        }
 
-	return {
-	  type: "table",
-	  columns,
-	  rows
-	};
+        return {
+          type: "table",
+          columns,
+          rows
+        };
       }
     })
   );

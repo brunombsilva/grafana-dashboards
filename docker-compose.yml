@@ -27,25 +27,25 @@ services:
       - GF_VARIABLES_TOPIC_VALUE
       - GF_VARIABLES_TOPIC_VALUES
     depends_on:
-      - prometheus
       - datasource
+      - influxdb
     ports:
       - '3000:3000'
 
-  prometheus:
-    image: prom/prometheus:v2.0.0
-    volumes:
-      - ./prometheus/:/etc/prometheus/
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
+  influxdb:
+    image: influxdb:1.5.4
     ports:
-      - 9090:9090
-    #links:
-    #  - github-exporter:metrics
+      - '8086:8086'
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
+  chronograf:
+    image: chronograf:latest
+    ports:
+      - 8888:8888
+    command: '--influxdb-url=http://influxdb:8086'
+    depends_on:
+      - influxdb
 
   datasource:
     build:
@@ -58,7 +58,10 @@ services:
       - JIRA_HOST
       - JIRA_USER
       - JIRA_PASS
-
+      - INFLUXDB_HOST=influxdb
+      - INFLUXDB_DATABASE=datasource
+    depends_on:
+      - influxdb
 volumes:
-  prometheus_data:
   grafana_data:
+  influxdb_data:
